@@ -1,1 +1,38 @@
-#Homework 1
+####Homework1 - basic unix operatitons for bioinformatics####
+
+###Task 1
+
+#Check the structure of the file
+less ./data/saccharomyces_cerevisiae_R64-2-1_20150113.gff
+
+#Count number of occurances of "chrII "
+grep "chrII\t" ./data/saccharomyces_cerevisiae_R64-2-1_20150113.gff
+
+###Answer: XXXX
+######Blir 0??? Funkar utan tab men inte med
+
+###Task 2
+
+#Chech out the file
+less ./data/S288C_reference_sequence_R64-2-1_20150113.fsa
+
+#Count occurances of "G" and "C"
+grep 'G\|C' -c ./data/saccharomyces_cerevisiae_R64-2-1_20150113.gff
+
+###Answer: 202572 occurances of G or C. 
+#####Hur ignorerar jag första raden med grep?
+
+###Task 3
+
+##a) 
+
+#Count occurances of "G" and "C"
+grep 'C\|G' -c Y55_JRIF00000000_SGD_cds.fsa 
+
+##Answer: 168177 occurances of G or C. A bit less than in the previous file.
+#####Hur ignorerar jag första raden med grep?
+
+##b)
+
+#Count number of ORFs in the strain
+grep "^>" 
