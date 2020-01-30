@@ -2,37 +2,77 @@
 
 ###Task 1
 
-#Check the structure of the file
+#Download data into current directory
+
+# Download a reference yeast genome as compressed archive to the current directory
+wget https://downloads.yeastgenome.org/sequence/S288C_reference/genome_releases/S288C_reference_genome_Current_Release.tgz
+
+# Decompress the archive (will create a new diretory)
+tar -xzvf S288C_reference_genome_Current_Release.tgz
+
+#Rename folder
+mv S288C_reference_genome_R64-2-1_20150113 data
+
+#Check the structure of the file in question
 less ./data/saccharomyces_cerevisiae_R64-2-1_20150113.gff
 
-#Count number of occurances of "chrII "
-grep "chrII\t" ./data/saccharomyces_cerevisiae_R64-2-1_20150113.gff
+#Find occurances of "chrII" in the first column, and store the third column on those row into a new file
+grep "chrII" ./data/saccharomyces_cerevisiae_R64-2-1_20150113.gff | cut -f 3 | sort > chrII.txt
 
-###Answer: XXXX
-######Blir 0??? Funkar utan tab men inte med
+#Count occurances of "gene" in chrII.txt
+grep "gene" -c chrII.txt
+
+###Answer: 681 genes on chromosome II
+
+
+
+
+
+
 
 ###Task 2
 
-#Chech out the file
+#Check out the file
 less ./data/S288C_reference_sequence_R64-2-1_20150113.fsa
 
-#Count occurances of "G" and "C"
-grep 'G\|C' -c ./data/saccharomyces_cerevisiae_R64-2-1_20150113.gff
+#Remove header
 
-###Answer: 202572 occurances of G or C. 
-#####Hur ignorerar jag första raden med grep?
+#Count occurances of "G" and "C"
+
+###Answer: 
+
+
 
 ###Task 3
 
+#Download new ORFs from new strain
+wget https://downloads.yeastgenome.org/sequence/strains/Y55/Y55_SGD_2015_JRIF00000000/Y55_JRIF00000000_SGD_cds.fsa.gz
+
+#Decompress it
+gunzip Y55/Y55_SGD_2015_JRIF00000000/Y55_JRIF00000000_SGD_cds.fsa.gz
+
 ##a) 
 
-#Count occurances of "G" and "C"
-grep 'C\|G' -c Y55_JRIF00000000_SGD_cds.fsa 
+#Remove header
 
-##Answer: 168177 occurances of G or C. A bit less than in the previous file.
-#####Hur ignorerar jag första raden med grep?
+#Count occurances of "G" and "C"
+
+
+##Answer: 
 
 ##b)
 
 #Count number of ORFs in the strain
-grep "^>" 
+grep "^>" -c ./data/Y55_JRIF00000000_SGD_cds.fsa
+
+#Count number of ORFs in the reference genome 
+grep "^>" -c ./data/orf_coding_all_R64-2-1_20150113.fasta 
+#####Stämmer detta?
+
+##Answer: 5330 vs 6713
+
+##c)
+
+
+
+
