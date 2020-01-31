@@ -17,16 +17,12 @@ mv S288C_reference_genome_R64-2-1_20150113 data
 less ./data/saccharomyces_cerevisiae_R64-2-1_20150113.gff
 
 #Find occurances of "chrII" in the first column, and store the third column on those row into a new file
-grep "chrII" ./data/saccharomyces_cerevisiae_R64-2-1_20150113.gff | cut -f 3 | sort > chrII.txt
+grep "^chrII" ./data/saccharomyces_cerevisiae_R64-2-1_20150113.gff | cut -f 3 | sort > chrII.txt
 
 #Count occurances of "gene" in chrII.txt
 grep "gene" -c chrII.txt
 
-###Answer: 681 genes on chromosome II
-
-
-
-
+###Answer: 
 
 
 
@@ -35,11 +31,29 @@ grep "gene" -c chrII.txt
 #Check out the file
 less ./data/S288C_reference_sequence_R64-2-1_20150113.fsa
 
-#Remove header
+#Remove headers and store in new file
+sed '/^>/d' ./data/S288C_reference_sequence_R64-2-1_20150113.fsa > S228C_wo_headers
 
-#Count occurances of "G" and "C"
+#Remove A and T, store in new file
+sed 's/T//g;s/A//g' S228C_wo_headers > S228C_GC_content
 
-###Answer: 
+#Count number of characters in file
+wc -c S228C_GC_content
+
+#Must sustract number of newline characters to obtain GC content
+wc -l S228C_GC_content
+
+#Compare with AT content and total number of nucleotides
+sed 's/G//g;s/C//g' S228C_wo_headers > S228C_AT_content
+wc -c S228C_AT_content #772057
+wc -l S228C_AT_content #202628
+wc -c S228C_wo_headers #12359733
+wc -l S228C_wo_headers #202628
+
+###Answer: 4840304-202628 = 4 637 676 
+###Control: 4840304 + 772057 - 2*202628 = 12359733 - 202628 = 12 157 105) ok!
+
+
 
 
 
