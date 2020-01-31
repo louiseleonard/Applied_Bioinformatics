@@ -22,7 +22,7 @@ grep "^chrII" ./data/saccharomyces_cerevisiae_R64-2-1_20150113.gff | cut -f 3 | 
 #Count occurances of "gene" in chrII.txt
 grep "gene" -c chrII.txt
 
-###Answer: 
+###Answer: 479 genes on chromosome II
 
 
 
