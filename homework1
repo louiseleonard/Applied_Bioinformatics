@@ -99,7 +99,7 @@ wc -l Y55_wo_headers #169620
 
 ##Calculations: 3361597 - 169620 = 3 191 977
 ##Control: 3361660 + 5056301 - 2*169620 = 8248278 - 169620 = 8078658 ok!
-###Answer: The GC content is 3 191 977, corresponding to 39.5%. I.e. lower in actual count of GC but a bit higher than in % than in task 2.
+##Answer: The GC content is 3 191 977, corresponding to 39.5%. I.e. lower in actual count of GC but a bit higher than in % than in task 2.
 
 
 
@@ -111,13 +111,41 @@ grep "^>" -c ./data/Y55_JRIF00000000_SGD_cds.fsa
 
 #Count number of ORFs in the reference genome 
 grep "^>" -c ./data/orf_coding_all_R64-2-1_20150113.fasta 
-#####Stämmer detta?
 
 ##Answer: 5330 vs 6713
 
 
 
 ##c)
+
+#Editing the Y55 orf file for comparison
+#Remove extra info in header
+awk '{print $1}' ./data/Y55_JRIF00000000_SGD_cds.fsa > Y55_first_col_only
+
+#Remove all extra newlines within sequences
+sed -e 's/\(^>.*$\)/#\1#/' Y55_first_col_only | tr -d "\r" | tr -d "\n" | sed -e 's/$/#/' | tr "#" "\n" | sed -e '/^$/d' > Y55_first_cleaned
+
+#Sort
+sort Y55_first_cleaned > Y55_sorted
+
+#Remove headers
+sed -i '/^>/d' Y55_sorted 
+
+#Editing the ref orf file for comparison
+#Remove all extra newlines within sequences
+sed -e 's/\(^>.*$\)/#\1#/' ./data/orf_coding_all_R64-2-1_20150113.fasta| tr -d "\r" | tr -d "\n" | sed -e 's/$/#/' | tr "#" "\n" | sed -e '/^$/d' > orf_cleaned
+
+#Remove headers, store in new file
+sed '/^>/d' orf_cleaned > orf_wo_header
+
+#Sort
+sort orf_cleaned > orf_sorted
+
+#Compare and find number of common lines, i.e. common sequences
+comm -12 orf_sorted Y55_sorted | wc -l
+
+##Answer: 578 ORFs are common.
+
 
 
 
