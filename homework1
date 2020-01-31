@@ -38,10 +38,10 @@ sed '/^>/d' ./data/S288C_reference_sequence_R64-2-1_20150113.fsa > S228C_wo_head
 sed 's/T//g;s/A//g' S228C_wo_headers > S228C_GC_content
 
 #Count number of characters in file
-wc -c S228C_GC_content
+wc -c S228C_GC_content #4840304
 
 #Must sustract number of newline characters to obtain GC content
-wc -l S228C_GC_content
+wc -l S228C_GC_content #202628
 
 #Compare with AT content and total number of nucleotides
 sed 's/G//g;s/C//g' S228C_wo_headers > S228C_AT_content
@@ -50,8 +50,9 @@ wc -l S228C_AT_content #202628
 wc -c S228C_wo_headers #12359733
 wc -l S228C_wo_headers #202628
 
-###Answer: 4840304-202628 = 4 637 676 
-###Control: 4840304 + 772057 - 2*202628 = 12359733 - 202628 = 12 157 105) ok!
+### Calculations: 4840304-202628 = 4 637 676 
+###Control: 4840304 + 772057 - 2*202628 = 12359733 - 202628 = 12 157 105 ok!
+###Answer: The GC content is 4 637 676, corresponding to 38,1%
 
 
 
@@ -65,14 +66,43 @@ wget https://downloads.yeastgenome.org/sequence/strains/Y55/Y55_SGD_2015_JRIF000
 #Decompress it
 gunzip Y55/Y55_SGD_2015_JRIF00000000/Y55_JRIF00000000_SGD_cds.fsa.gz
 
+#Move it to data folder
+mv Y55_JRIF00000000_SGD_cds.fsa ./data
+
+
+
 ##a) 
 
-#Remove header
+#Remove header and store in new file
+sed '/^>/d' ./data/Y55_JRIF00000000_SGD_cds.fsa > Y55_wo_headers
 
-#Count occurances of "G" and "C"
+#Inspect file, notice that there are other characters thaan GCTA: gctanNyY
+sed 's/T//g;s/A//g;s/G//g;s/C//g;s/[[:space:]]//g' Y55_wo_headers > Y55_test
+tr -d '\n' <Y55_test
+
+#Remove yY, nN, aA and tT, store in new file
+sed 's/T//gI;s/A//gI;s/N//gI;s/Y//gI' Y55_wo_headers > Y55_GC_content
 
 
-##Answer: 
+#Count number of characters in file
+wc -c Y55_GC_content #3361597
+
+#Must sustract number of newline characters to obtain GC content
+wc -l Y55_GC_content #169620
+
+#Compare with ATNY content and total number of nucleotides
+sed 's/G//gI;s/C//gI' Y55_wo_headers > Y55_AT_content
+wc -c Y55_AT_content #5056301
+wc -l Y55_AT_content #169620
+wc -c Y55_wo_headers #8248278
+wc -l Y55_wo_headers #169620
+
+##Calculations: 3361597 - 169620 = 3 191 977
+##Control: 3361660 + 5056301 - 2*169620 = 8248278 - 169620 = 8078658 ok!
+###Answer: The GC content is 3 191 977, corresponding to 39.5%. I.e. lower in actual count of GC but a bit higher than in % than in task 2.
+
+
+
 
 ##b)
 
@@ -84,6 +114,8 @@ grep "^>" -c ./data/orf_coding_all_R64-2-1_20150113.fasta
 #####Stämmer detta?
 
 ##Answer: 5330 vs 6713
+
+
 
 ##c)
 
