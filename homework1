@@ -31,10 +31,10 @@ grep "gene" -c chrII.txt
 #Check out the file
 less ./data/S288C_reference_sequence_R64-2-1_20150113.fsa
 
-#Remove headers and store in new file
+#Remove headers and store in new file (delete all lines starting with a '>' charachter)
 sed '/^>/d' ./data/S288C_reference_sequence_R64-2-1_20150113.fsa > S228C_wo_headers
 
-#Remove A and T, store in new file
+#Remove A and T, store in new file (remove all occurances of the characters T,A)
 sed 's/T//g;s/A//g' S228C_wo_headers > S228C_GC_content
 
 #Count number of characters in file
@@ -76,13 +76,16 @@ mv Y55_JRIF00000000_SGD_cds.fsa ./data
 #Remove header and store in new file
 sed '/^>/d' ./data/Y55_JRIF00000000_SGD_cds.fsa > Y55_wo_headers
 
-#Inspect file, notice that there are other characters thaan GCTA: gctanNyY
+#Inspect file by removing all occurances of A,C,G,T and space and store in a temporary file 
 sed 's/T//g;s/A//g;s/G//g;s/C//g;s/[[:space:]]//g' Y55_wo_headers > Y55_test
+#Also remove all newline characters 
 tr -d '\n' <Y55_test
+#Look at the file 
+less Y55_test
+#--> there are other characters in the file: a,c,g,t,n,N,y,Y
 
-#Remove yY, nN, aA and tT, store in new file
+#Remove y, Y, n, N, a, A, t and T, store in new file
 sed 's/T//gI;s/A//gI;s/N//gI;s/Y//gI' Y55_wo_headers > Y55_GC_content
-
 
 #Count number of characters in file
 wc -c Y55_GC_content #3361597
@@ -102,8 +105,6 @@ wc -l Y55_wo_headers #169620
 ##Answer: The GC content is 3 191 977, corresponding to 39.5%. I.e. lower in actual count of GC but a bit higher than in % than in task 2.
 
 
-
-
 ##b)
 
 #Count number of ORFs in the strain
@@ -115,20 +116,19 @@ grep "^>" -c ./data/orf_coding_all_R64-2-1_20150113.fasta
 ##Answer: 5330 vs 6713
 
 
-
 ##c)
 
 #Editing the Y55 orf file for comparison
-#Remove extra info in header
+#Remove extra info in header, keel only the first column of the header
 awk '{print $1}' ./data/Y55_JRIF00000000_SGD_cds.fsa > Y55_first_col_only
 
 #Remove all extra newlines within sequences
 sed -e 's/\(^>.*$\)/#\1#/' Y55_first_col_only | tr -d "\r" | tr -d "\n" | sed -e 's/$/#/' | tr "#" "\n" | sed -e '/^$/d' > Y55_first_cleaned
 
-#Sort
+#Sort the new sequence file
 sort Y55_first_cleaned > Y55_sorted
 
-#Remove headers
+#Remove headers from the sorted file
 sed -i '/^>/d' Y55_sorted 
 
 #Editing the ref orf file for comparison
