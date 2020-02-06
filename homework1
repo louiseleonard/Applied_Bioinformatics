@@ -110,6 +110,7 @@ wc -l Y55_wo_headers #169620
 #Count number of ORFs in the strain
 grep "^>" -c ./data/Y55_JRIF00000000_SGD_cds.fsa
 
+
 #Count number of ORFs in the reference genome 
 grep "^>" -c ./data/orf_coding_all_R64-2-1_20150113.fasta 
 
@@ -118,35 +119,17 @@ grep "^>" -c ./data/orf_coding_all_R64-2-1_20150113.fasta
 
 ##c)
 
-#Editing the Y55 orf file for comparison
-#Remove extra info in header, keel only the first column of the header
-awk '{print $1}' ./data/Y55_JRIF00000000_SGD_cds.fsa > Y55_first_col_only
 
-#Remove all extra newlines within sequences
-sed -e 's/\(^>.*$\)/#\1#/' Y55_first_col_only | tr -d "\r" | tr -d "\n" | sed -e 's/$/#/' | tr "#" "\n" | sed -e '/^$/d' > Y55_first_cleaned
+#Exract all unique ORFs in the Y55 strain, remove suffixes and all undefined ORFs. Sort and store in new file
+grep "^>" ./data/Y55_JRIF00000000_SGD_cds.fsa | sed 's/_.*//' | sed '/>UNDEF/d' | sort > orf_Y55_sorted
 
-#Sort the new sequence file
-sort Y55_first_cleaned > Y55_sorted
+#Extract all unique ORFs in the reference strain. In order to keep only the ORF identifiers from the headers, use cut with space as delimiter and store the first "column" in a new file.
+grep "^>" ./data/orf_coding_all_R64-2-1_20150113.fasta | cut -f 1 -d " " | sort > orf_ref_sorted
 
-#Remove headers from the sorted file
-sed -i '/^>/d' Y55_sorted 
+#Compare the two files, and count the number of identifical ORF identfiers
+comm -12 orf_Y55_sorted orf_ref_sorted | wc -l
 
-#Editing the ref orf file for comparison
-#Remove all extra newlines within sequences
-sed -e 's/\(^>.*$\)/#\1#/' ./data/orf_coding_all_R64-2-1_20150113.fasta| tr -d "\r" | tr -d "\n" | sed -e 's/$/#/' | tr "#" "\n" | sed -e '/^$/d' > orf_cleaned
-
-#Remove headers, store in new file
-sed '/^>/d' orf_cleaned > orf_wo_header
-
-#Sort
-sort orf_cleaned > orf_sorted
-
-#Compare and find number of common lines, i.e. common sequences
-comm -12 orf_sorted Y55_sorted | wc -l
-
-##Answer: 578 ORFs are common.
-
-
+##Answer: 5168 common ORFs.
 
 
 
