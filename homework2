@@ -245,3 +245,74 @@ def greedy_shortest_common_superstring(strings):
     return shortest_superstring
 
 ###Part 3###
+
+#Construct a burrows wheeler transform algorithm
+
+def burrows_wheeler_transform(seq):
+    """
+    Input: sequence = string to transform. 
+    E.g. sequence = 'ABCD$'
+    
+    Output: burrows-wheeler transform of the input = string
+    E.g. transform = '$ABCD'
+
+    Approach: generate the Burrows-Wheeler Matrix by and take its last column
+
+    """
+    #Form the bwm, i.e. the table of cylinder suffixes
+    #For each position in the sequence, take the prefix with offset in
+    #that position and extend with the cylinder. Then sort.
+    bwm = sorted(seq[i:] + seq[:i] for i in range(len(seq)))
+
+    #The last column corresponds to the bwt
+    #Take the last character of each row in the bwm. Turn list of char to string
+    bwt = "".join([row[-1:] for row in bwm])
+
+    return bwt
+   
+ #Construct a binary search algorithm
+ 
+ def binary_search(items, query_item):
+    """
+    Locate the leftmost value exactly equal to query_item in items
+    and return its index or -1 if the value is not found
+    
+    Input: 
+    items = list of comparable elements (integers, strings, etc)
+    query_item = item to search for in items (must be of same data type as elements in items)
+    
+    Output:
+    Index of matching value or -1 if not found
+    """
+    # The idea is to consider iteratively halve the items list,
+    # since we know the values are sorted.
+    # We keep track of the current half to look in by using the bounding indices
+    
+    # Start off by considering the entire items list
+    first_index = 0
+    last_index = len(items) - 1
+
+    # Eventually, by updating 
+    while first_index <= last_index:
+        
+        # Get middle index between first and last indices of current half
+        midpoint = (last_index - first_index)/2
+        
+        # The query item is at the midpoint
+        if items[midpoint] == query_item:
+            return midpoint
+        
+        else:
+            # The list is sorted.
+            # So if the query item's value is less than the value at the current half midpoint,
+            # we know the query must be to the left of the midpoint.
+            if query_item < items[midpoint]:
+                # Bisect the current interval and take the left half
+                last_index =  midpoint
+                
+            # Otherwise, the query item must be to the right of the midpoint
+            else:
+                # Bisect the current interval and take the right half
+                first_index =  midpoint
+
+    return -1
