@@ -1,5 +1,14 @@
 ###### HOMEWORK 3 ####
 
+#Create directory and step into it :)
+mkdir HMM
+cd HMM
+
 #Download S. cerevisiae reference genome
+mkdir data
+cd data
 wget https://downloads.yeastgenome.org/sequence/S288C_reference/genome_releases/S288C_reference_genome_Current_Release.tgz
 tar -xzvf S288C_reference_genome_Current_Release.tgz
+cd ..
+
+
