@@ -1,5 +1,5 @@
 ###### HOMEWORK 3 ####
 
 #Download S. cerevisiae reference genome
-wget https://downloads.yeastgenome.org/sequence/S288C_reference/genome_releases/S288C_reference_genome_Curr$
+wget https://downloads.yeastgenome.org/sequence/S288C_reference/genome_releases/S288C_reference_genome_Current_Release.tgz
 tar -xzvf S288C_reference_genome_Current_Release.tgz
